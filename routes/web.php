@@ -19,4 +19,7 @@ Route::group(['prefix'=> 'ecommerce',  'as'=>'ecom.'], function()
 {
     Route::get('homepage', 'App\Http\Controllers\HomeController@home_page')->name('homepage');
 
+    Route::post('add-product','App\Http\Controllers\Product\ProductController@add_product')->name('add.product');
+    Route::get('product-page','App\Http\Controllers\Product\ProductController@product_page')->name('product');
+
 });

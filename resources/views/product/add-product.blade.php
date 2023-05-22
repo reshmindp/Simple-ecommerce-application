@@ -1,15 +1,15 @@
 @extends('includes.header-footer')
-@section('title','Create Product')
+@section('title','Add Product')
 @section('content')
     <main class="app-content">
       <div class="app-title">
         <div>
-          <h1><i class="fa fa-dashboard"></i> Create Product</h1>
+          <h1><i class="fa fa-dashboard"></i> Add Product</h1>
          
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="javascript:void(0);">Create Product</a></li>
+          <li class="breadcrumb-item"><a href="javascript:void(0);">Add Product</a></li>
         </ul>
       </div>
       <div class="row">
@@ -17,7 +17,7 @@
           <div class="tile">
             
             <div class="tile-body">
-              <form method="POST" action="{{route('ecom.create')}}">
+              <form method="POST" action="{{route('ecom.add.product')}}">
                 @csrf
                 <div class="form-group">
                   <label class="control-label">Product Name</label>
