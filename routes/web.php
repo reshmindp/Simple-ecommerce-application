@@ -29,4 +29,9 @@ Route::group(['prefix'=> 'ecommerce',  'as'=>'ecom.'], function()
     Route::get('categories','App\Http\Controllers\Category\CategoryController@category_page')->name('categories');
     Route::post('add-category','App\Http\Controllers\Category\CategoryController@add_category')->name('add.category');
 
+    Route::get('new-order','App\Http\Controllers\Order\OrderController@new_order_page')->name('new.order');
+    Route::post('add-order','App\Http\Controllers\Order\OrderController@add_order')->name('add.order');
+    Route::get('order-list','App\Http\Controllers\Order\OrderController@order_list')->name('order.list');
+
+
 });

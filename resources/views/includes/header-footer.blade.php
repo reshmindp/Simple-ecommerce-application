@@ -43,6 +43,12 @@
             <li><a class="treeview-item" href="{{route('ecom.product.list')}}"><i class="icon fa fa-circle-o"></i> Product List</a></li>
           </ul>
         </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Manage Orders</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="{{route('ecom.new.order')}}"><i class="icon fa fa-circle-o"></i> Add Order</a></li>
+            <li><a class="treeview-item" href="{{route('ecom.order.list')}}"><i class="icon fa fa-circle-o"></i> Order List</a></li>
+          </ul>
+        </li>
       </ul>
     </aside>
     @yield('content')
