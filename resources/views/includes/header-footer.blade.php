@@ -36,10 +36,11 @@
       </div>
       <ul class="app-menu">
         <li><a class="app-menu__item" href="{{route('ecom.homepage')}}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li><a class="app-menu__item" href="{{route('ecom.categories')}}"><i class="app-menu__icon fa fa-list-alt"></i><span class="app-menu__label">Manage Category</span></a></li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Manage Products</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="{{route('ecom.product')}}"><i class="icon fa fa-circle-o"></i> Add Product</a></li>
-            <li><a class="treeview-item" href=""><i class="icon fa fa-circle-o"></i> Product List</a></li>
+            <li><a class="treeview-item" href="{{route('ecom.product.list')}}"><i class="icon fa fa-circle-o"></i> Product List</a></li>
           </ul>
         </li>
       </ul>

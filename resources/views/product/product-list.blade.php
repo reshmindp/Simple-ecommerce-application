@@ -17,6 +17,11 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="tile-body">
+              @if(Session::has('success'))
+                  <div style="color: green;">
+                  <strong>Success! </strong>{{Session::get('success')}}</div>
+                  <br><br>
+                  @endif
               <div class="table-responsive">
                 <table class="table table-hover table-bordered" id="sampleTable">
                   <thead>
@@ -36,9 +41,9 @@
                     <tr>
                       <td>{{$i++}}</td>
                       <td>{{$pro->product_name}}</td>
-                      <td>{{$pro->category}}</td>
+                      <td>{{$pro->category_name}}</td>
                       <td>{{$pro->price}}</td>
-                      <td><a href="">Edit</a> / <a href="">Delete</a></td>
+                      <td><a href="{{route('ecom.edit.product', $pro->product_id)}}">Edit</a> / <a onclick="return confirm('Are you sure want to delete?')" href="{{route('ecom.delete.product', $pro->product_id)}}">Delete</a></td>
                     </tr>
                     @endforeach
                     
