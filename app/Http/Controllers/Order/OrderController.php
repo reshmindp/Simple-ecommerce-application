@@ -27,7 +27,8 @@ class OrderController extends Controller
         $validator= Validator::make(request()->all(),
                         ['customer_name' => 'required|string',
                         'phone_number' => 'required|numeric|digits:10',
-                        'proproduct_id[0][product]'=>'required', $messages]);
+                        'product_id' => 'required',
+                         'quantity'=>'required', $messages]);
 
         $data = request()->except('_token');
 
@@ -36,47 +37,16 @@ class OrderController extends Controller
         {
             $net_amount = 0;
             $quatitys = 0;
-            $product_data = [];
-
-        
-            foreach($data['product_id'] as $prods => $key)
-            {
-
-                $product_info = Product::where('product_id','=', $key)->sum(DB::raw('products.price  * '.$data["quantity"][$prods]["qty"]));
-                $net_amount += $product_info; 
-            }
             
             $order_data = array('order_number'=> rand(10000,99999), 'customer_name'=> $data['customer_name'], 'phone_number'=> $data['phone_number']
-            , 'net_amount' =>  $net_amount);
+            , 'net_amount' =>  $data['hid_order_total']);
 
             $order_id    = DB::table('orders')->insertGetId($order_data);
 
-            for ($i = 1; $i < count($data['product_id']); $i++) 
-            {
-                $product_data[] = [
-                    'order_id' => $order_id,
-                    'product_id' => $data['product_id'][$i]['product'],
-                    'quantity[0][qty]' => $data['quantity'][$i]['qty'],
-                    'amount' =>$order_id];
-
-                    CartOrder::insert($product_data);
-            }
+            DB::table('cart_orders')->where('order_status', '0')->update(array('order_id' => $order_id,'order_status'=> 1));
             
-            
-            // foreach($data['product_id'] as $mprods => $mkey)
-            // {
-                //echo $mkey['product']."<br>";
-                // $product_data['order_id'] = $order_id;
-                // $product_data['product_id'] = $mkey['product'];
-                // $product_data['quantity'] = $data['quantity'][$mprods]['qty'];
-                // $product_data['amount'] = '100'; 
-
-                //array('order_id'=>$order_id, 'product_id'=>$mkey['product'], 'quantity'=>$data["quantity"][$prods]["qty"], 'amount'=>'111');
-
-                // CartOrder::create($product_data);
-                // session()->flash('success', 'Order created successfully!');
-                // return redirect(route('ecom.order.list'));
-            //}
+            session()->flash('success', 'Order Placed Successfully!');
+            return redirect(route('ecom.order.list'));
 
         }
 
@@ -99,7 +69,12 @@ class OrderController extends Controller
     public function view_invoice($id)
     {
         $invoice_data = Order::where('order_id', '=', $id)->first();
-        $products = CartOrder::join('products','products.product_id', '=', 'cart_orders.product_id')->where('order_id', '=', $id)->get();
+        $products = DB::table('products')
+        ->join('cart_orders', 'cart_orders.product_id', '=', 'products.product_id')
+        ->select('products.product_id', 'products.product_name', 'products.price as amount', DB::raw('SUM(cart_orders.quantity) as quantity'))
+        ->where([['cart_orders.order_status','=', 1],['order_id','=', $id]])
+        ->groupBy('products.product_id', 'products.product_name', 'products.price')
+        ->get();
 
         return view('order/view-invoice', compact('invoice_data','products'));
 
@@ -107,9 +82,12 @@ class OrderController extends Controller
 
     public function edit_order($id)
     {
-        $order_info = Order::where('order_id','=', $id)->get();
+        $order_info = Order::where('order_id','=', $id)->first();
+        $order_products = CartOrder::join('products','products.product_id','=','cart_orders.product_id')->where('order_id','=',$id)->get();
 
-        return view('order/edit-order',compact('order_info'));
+        $products = Product::all();
+
+        return view('order/edit-order',compact('order_info', 'products','order_products'));
 
     }
 
@@ -120,6 +98,41 @@ class OrderController extends Controller
 
         session()->flash('success', 'Order deleted successfully!');
         return redirect(route('ecom.order.list'));
+
+    }
+
+    public function add_to_cart()
+    {
+        $request = request()->except('_token');
+        $net_amount = 0;
+            
+        $product_id = $request['product_id'];
+        $quantity = $request['quantity'];
+        $amount = $request['amount'];
+
+        $product_info = Product::where('product_id','=', $product_id)->sum(DB::raw('products.price  * '.$quantity));
+        $net_amount += $product_info; 
+
+        $product_data['order_id'] = 0;
+        $product_data['product_id'] = $product_id;
+        $product_data['quantity'] = $quantity;
+        $product_data['amount'] = $amount; 
+
+        if(CartOrder::updateOrCreate($product_data))
+        {
+            $sum_total = CartOrder::where('order_status', '0')->sum(\DB::raw('amount * quantity'));
+
+            echo json_encode(array('message'=>'success','total'=> 'Rs: '.$sum_total));
+        }
+        else
+        {
+            echo "Error";
+        }
+
+    }
+
+    public function update_order()
+    {
 
     }
 }

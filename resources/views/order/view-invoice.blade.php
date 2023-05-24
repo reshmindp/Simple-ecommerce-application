@@ -30,9 +30,8 @@
                         @php 
                         $i = 1;
                         @endphp
-                        @foreach($products as $pro)
-                        <p>{{$i.'. '.$pro->product_name.' X '.$pro->quantity.' = '.$pro->amount*$pro->quantity}}</p>
-                        <p>{{$i.'. '.$pro->product_name.' X '.$pro->quantity.' = '.$pro->amount*$pro->quantity}}</p>
+                        @foreach ($products as $pro)
+                            <p>{{$i++.'. '.$pro->product_name.' X '.$pro->quantity.' = '.$pro->amount*$pro->quantity}}</p>
                         @endforeach
                       </td>
                     </tr>

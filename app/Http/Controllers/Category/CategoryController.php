@@ -42,4 +42,12 @@ class CategoryController extends Controller
 
         return view('category/add-category',compact('categories'));
     }
+
+    public function delete_category($id)
+    {
+        Category::where('category_id','=',$id)->delete();
+        session()->flash('success', 'Category deleted successfully!');
+        return redirect(route('ecom.categories'));
+
+    }
 }

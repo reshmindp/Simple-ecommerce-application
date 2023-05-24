@@ -60,7 +60,7 @@
                     <tr>
                       <td>{{$i++}}</td>
                       <td>{{$cat->category_name}}</td>
-                      <td><a href="">Delete</a></td>
+                      <td><a href="{{route('ecom.delete.category', $cat->category_id)}}" onclick="return confirm('Are you sure want to delete?')">Delete</a></td>
                     </tr>
                     @endforeach
                     

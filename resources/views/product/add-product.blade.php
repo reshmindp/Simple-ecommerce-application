@@ -31,7 +31,7 @@
                 </div>
                 <div class="form-group">
                   <label class="control-label">Category</label>
-                  {!!$errors->first('category', '<span style="color:red">:message</span>')!!}
+                  {!!$errors->first('category_id', '<span style="color:red">:message</span>')!!}
                   <select name="category_id" class="form-control">
                     <option value="">Select a Category</option>
                     @foreach($categories as $cat)

@@ -28,14 +28,20 @@ Route::group(['prefix'=> 'ecommerce',  'as'=>'ecom.'], function()
 
     Route::get('categories','App\Http\Controllers\Category\CategoryController@category_page')->name('categories');
     Route::post('add-category','App\Http\Controllers\Category\CategoryController@add_category')->name('add.category');
+    Route::get('delete-category/{id}','App\Http\Controllers\Category\CategoryController@delete_category')->name('delete.category');
 
     Route::get('new-order','App\Http\Controllers\Order\OrderController@new_order_page')->name('new.order');
     Route::get('edit-order/{id}','App\Http\Controllers\Order\OrderController@edit_order')->name('edit.order');
     Route::get('delete-order/{id}','App\Http\Controllers\Order\OrderController@delete_order')->name('delete.order');
+    Route::post('update-order','App\Http\Controllers\Order\OrderController@update_order')->name('update.order');
+
 
     Route::post('add-order','App\Http\Controllers\Order\OrderController@add_order')->name('add.order');
     Route::get('order-list','App\Http\Controllers\Order\OrderController@order_list')->name('order.list');
     Route::get('invoice/{id}','App\Http\Controllers\Order\OrderController@view_invoice')->name('view.invoice');
+
+    Route::post('add-to-cart','App\Http\Controllers\Order\OrderController@add_to_cart')->name('addto.cart');
+
 
 
 

@@ -39,26 +39,24 @@
                 <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label">Product</label>
-                  {!!$errors->first('product_id[0][product]', '<span style="color:red">:message</span>')!!}
-                  <select id="pro_id" name="product_id[0][product]" class="form-control">
+                  {!!$errors->first('product_id', '<span style="color:red">:message</span>')!!}
+                  <select id="product_id" name="product_id" class="form-control">
                     <option value="">Select a Product</option>
                     @foreach($products as $pro)
                     <option data-amount="{{$pro->price}}" value="{{$pro->product_id}}">{{$pro->product_name}}</option>
                     @endforeach
                   </select>
-                  <input type="hidden" name="hid_amount" value="">
                 </div>
                   </div>
                   
                     <div class="col-md-4">
                       <div class="form-group">
                         <label class="control-label">Quantity</label>
+                        {!!$errors->first('quantity', '<span style="color:red">:message</span>')!!}
                         <div class="input-group">
-                  
-                          {!!$errors->first('quantity[0][qty]', '<span style="color:red">:message</span>')!!}
-                          <input class="form-control" value="{{old('quantity[0][qty]')}}" name="quantity[0][qty]" type="number" placeholder="Enter quantity">
+                          <input class="form-control" value="{{old('quantity')}}" name="quantity"  id="quantity" type="number" placeholder="Enter quantity">
                           &emsp;
-                          <button type="button" id="dynamic-add" class="btn btn-primary">Add Product</button>
+                          <button type="button" id="add-to-cart" class="btn btn-primary">Add Product</button>
                         </div>
                       </div>
                     </div>
@@ -68,7 +66,8 @@
                 </div>
                 <div class="row">
                   <div class="col-md-4">
-                    <Label><strong>Order Total:</strong></Label>
+                    <Label><strong>Order Total: </strong><span id="order_total"></span></Label>
+                    <input type="hidden" name="hid_order_total" id="hid_order_total">
                   </div>
                 </div>
                 <div class="tile-footer">
@@ -88,6 +87,44 @@
     </main>
 
     @push('custom-js')
+    <script>
+      $(document).ready(function () {
+                $("#add-to-cart").click(function () 
+                {                  
+                    var product = $('#product_id').find(":selected").val();
+                    var quantity = $("#quantity").val();
+                    var amount = $('#product_id option:selected').data('amount');
+                    
+                    $.ajax({
+                    type: "POST",
+                    dataType:"json",
+                    url: "{{route('ecom.addto.cart')}}",
+                    data:{product_id: product, 
+                      quantity: quantity,
+                      amount: amount,
+                      _token: '{{csrf_token()}}'},
+                    success: function(data)
+                    {
+                        if(data.message=='success')
+                        {
+                          alert("Product added to cart");
+                          $("#order_total").html(data.total);
+                          $("#hid_order_total").val(data.total);
+
+                        }
+                        else
+                        {
+                          alert('Error occured');
+                            //  $("#id").html("Number not registered with us");
+                            
+                          }
+                    }
+                    });    
+                });
+            });
+
+    </script>
+
         <script type="text/javascript">
           var i = 0;
           $("#dynamic-add").click(function () {
@@ -99,23 +136,6 @@
               $(this).parents('#dynamic-row').remove();
           });
 
-        </script>
-        <script>
-          var form1 = document.querySelector('#testform');
-          var activities = document.getElementById("pro_id");
-          let dataView = null;
-          activities.addEventListener('change', () => {
-
-          form1.querySelectorAll('option').forEach((opt) => {
-
-            if (opt.value === activities.value) {
-
-              dataView = opt.getAttribute("data-amount");
-            }
-          })
-          console.log(dataView);
-          });
-          
         </script>
     @endpush
 
